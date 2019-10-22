@@ -42,9 +42,3 @@ func (effect SequencedEffect) Play(duration int) {
 		shell_utils.Clear()
 	}
 }
-
-// Custom effects
-func CreatePeriodicSequencedLayeredEffect(text string, from shell_styles.Output, to shell_styles.Output) shell_core.LayeredEffect {
-	var layeredEffect shell_core.LayeredEffect = CreateSequencedLayeredEffect(text, from, to)
-	return layeredEffect
-}
