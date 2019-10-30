@@ -1,4 +1,4 @@
-package shell_effects
+package basic_gradient_layered
 
 import (
 	"shellacking/shell_core"
@@ -11,8 +11,8 @@ type SequencedEffect struct {
 	sequences []shell_core.Matrix
 }
 
-func CreateSequencedLayeredEffect(text string, from shell_styles.Output, to shell_styles.Output) shell_core.LayeredEffect {
-	var layeredEffect shell_core.LayeredEffect = &SequencedEffect{[]shell_core.Matrix{}}
+func CreateSequencedLayeredEffect(text string, from shell_styles.Output, to shell_styles.Output) shell_core.GradientEffect {
+	var layeredEffect shell_core.GradientEffect = &SequencedEffect{[]shell_core.Matrix{}}
 	layeredEffect.Create(text, from, to)
 	return layeredEffect
 }
@@ -24,7 +24,7 @@ func (effect *SequencedEffect) Create(text string, from shell_styles.Output, to 
 	for i, _ := range runes {
 		matrix := shell_core.CreateMatrix(
 			[][]shell_core.ShellOutput{
-				{shell_core.CreateColoredString(string(runes[:i]), &to)}, {shell_core.CreateColoredString(string(runes[i:]), &from)}})
+				{	shell_core.CreateColoredString(string(runes[:i]), &to)}, {shell_core.CreateColoredString(string(runes[i:]), &from)}})
 		effect.sequences = append(effect.sequences, matrix)
 	}
 }
