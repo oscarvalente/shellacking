@@ -20,6 +20,26 @@ func CreateColoredString(text string, color *shell_styles.Output) ShellOutput {
 	return outputColoredString
 }
 
+func (coloredResetString ColoredAndResetString) Format() string {
+	return coloredResetString.Color.ToString() + coloredResetString.Text + coloredResetString.Type.ToString()
+}
+
+type ColoredAndResetString struct {
+	Text  string
+	Color shell_styles.Output
+	Type  shell_styles.Output
+}
+
+func CreateColoredAndResetString(text string, color *shell_styles.Output, reset *shell_styles.Output) ShellOutput {
+	var outputColoredString ShellOutput = ColoredAndResetString{text, *color, *reset}
+	return outputColoredString
+}
+
+func CreateEmptyString() ShellOutput {
+	var outputColoredString ShellOutput = ColoredString{" ", shell_styles.FgDefault}
+	return outputColoredString
+}
+
 func (rs ResetString) Format() string {
 	return rs.Type.ToString()
 }
@@ -72,6 +92,18 @@ func CreateMatrix(lines [][]ShellOutput) Matrix {
 	return Matrix{lines}
 }
 
+func CreateEmptyMatrix(rows int, cols int) Matrix {
+	lines := [][]ShellOutput{{}}
+	for x := 0; x < rows; x++ { // lines
+		lines = append(lines, CreateEmptyShellOutputLine())
+		for y := 0; y < cols; y++ { //cols
+			emptyString := CreateEmptyString()
+			lines[x] = append(lines[x], emptyString)
+		}
+	}
+	return CreateMatrix(lines)
+}
+
 func CloneMatrix(matrix Matrix) Matrix {
 	clone := Matrix{}
 	clone.Lines = CloneMatrixLines(matrix.Lines)
@@ -80,6 +112,10 @@ func CloneMatrix(matrix Matrix) Matrix {
 
 func UpdateMatrixLines(matrix *Matrix, lines [][]ShellOutput) {
 	matrix.Lines = lines
+}
+
+func InsertMatrixValue(value ShellOutput, x int, y int, matrix *Matrix) {
+	matrix.Lines[y][x] = value
 }
 
 func PrintMatrix(matrix *Matrix) {

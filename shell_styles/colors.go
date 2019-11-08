@@ -4,6 +4,7 @@ const escape = "\x1B"
 const RESET_ALL = "\x1B[0m"
 const fgBlue = "[34m"
 const fgGreen = "[32m"
+const fgDefault = "[39m"
 const fgLightGreen = "[92m"
 const fgDarkGray = "[90m"
 const bgWhite = "[107m"
@@ -34,6 +35,7 @@ func (color Reset) ToString() string {
 	return RESET_ALL
 }
 
+var FgDefault Output = Color{name: "fg Default", prefix: formatWithPrefix(fgDefault)}
 var FgBlue Output = Color{name: "fg Blue", prefix: formatWithPrefix(fgBlue)}
 var FgGreen Output = Color{name: "fg Green", prefix: formatWithPrefix(fgGreen)}
 var FgLightGreen Output = Color{name: "fg LightGreen", prefix: formatWithPrefix(fgLightGreen)}
