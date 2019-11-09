@@ -1,18 +1,22 @@
 package main
 
 import (
-	"shellacking/shell_core"
+	"fmt"
 	"shellacking/shell_geo"
-	"shellacking/shell_styles"
 )
 
 func main() {
 
-	m := shell_core.CreateEmptyMatrix(40, 100)
+	//m := shell_core.CreateEmptyMatrix(40, 100)
 
-	shell_geo.DrawLine(shell_geo.Point{X: 0, Y: 0}, shell_geo.Point{X: 20, Y: 39}, shell_styles.BgWhite, &m)
-	shell_geo.DrawLine(shell_geo.Point{X: 20, Y: 39}, shell_geo.Point{X: 40, Y: 0}, shell_styles.FgGreen, &m)
-	shell_core.PrintMatrixLn(&m)
+	//shell_geo.DrawLine(shell_geo.Point{X: 0, Y: 0}, shell_geo.Point{X: 20, Y: 39}, shell_styles.BgWhite, &m)
+	//shell_geo.DrawLine(shell_geo.Point{X: 20, Y: 39}, shell_geo.Point{X: 40, Y: 0}, shell_styles.FgGreen, &m)
+	//shell_core.PrintMatrixLn(&m)
+
+	m := [][]float64{{3, 0}, {0, 3}}
+	t := [][]float64{{1, 1, -1, -1}, {1, -1, 1, -1}}
+	r := shell_geo.MatrixMult(m, t)
+	fmt.Print(r)
 
 	//myFirstEffect := basic_gradient_layered.CreateSequencedLayeredEffect("now as the river dissolves the sea", shell_styles.FgBlue, shell_styles.FgGreen)
 	//myFirstEffect.Play(2)
