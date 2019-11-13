@@ -1,22 +1,29 @@
 package main
 
 import (
-	"fmt"
-	"shellacking/shell_geo"
+	"shellacking/shell_core"
+	. "shellacking/shell_geo"
+	"shellacking/shell_styles"
 )
 
 func main() {
 
-	//m := shell_core.CreateEmptyMatrix(40, 100)
+	//shell_utils.Clear()
+	m := shell_core.CreateEmptyMatrix(40, 100)
 
-	//shell_geo.DrawLine(shell_geo.Point{X: 0, Y: 0}, shell_geo.Point{X: 20, Y: 39}, shell_styles.BgWhite, &m)
-	//shell_geo.DrawLine(shell_geo.Point{X: 20, Y: 39}, shell_geo.Point{X: 40, Y: 0}, shell_styles.FgGreen, &m)
-	//shell_core.PrintMatrixLn(&m)
+	//r := float64(0)
 
-	m := [][]float64{{3, 0}, {0, 3}}
-	t := [][]float64{{1, 1, -1, -1}, {1, -1, 1, -1}}
-	r := shell_geo.MatrixMult(m, t)
-	fmt.Print(r)
+	DrawLine(Point2D{X: 0, Y: 0}, Point2D{X: 30, Y: 10}, shell_styles.BgWhite, &m, &State)
+	RotateBy(-10, &State)
+	DrawLine(Point2D{X: 0, Y: 0}, Point2D{X: 30, Y: 10}, shell_styles.BgWhite, &m, &State)
+	//for true != false {
+	//	r -= 10
+	//	shell_core.PrintOutputMatrixLn(&m)
+	//	time.Sleep(time.Duration(2000) * time.Millisecond)
+	//	ResetState()
+	//	shell_utils.Clear()
+	//}
+	//shell_geo.DrawLine(shell_geo.Point2D{X: 20, Y: 39}, shell_geo.Point2D{X: 40, Y: 0}, shell_styles.FgGreen, &m)
 
 	//myFirstEffect := basic_gradient_layered.CreateSequencedLayeredEffect("now as the river dissolves the sea", shell_styles.FgBlue, shell_styles.FgGreen)
 	//myFirstEffect.Play(2)

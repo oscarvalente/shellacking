@@ -45,7 +45,7 @@ func (effect SequencedEffect) Play(duration int) {
 	slice = int64(float64(duration) / float64(len(effect.sequences)) * 1000)
 
 	for i, matrix := range effect.sequences {
-		shell_core.PrintMatrixLn(&matrix)
+		shell_core.PrintOutputMatrixLn(&matrix)
 		if i != len(effect.sequences)-1 {
 			time.Sleep(time.Duration(slice) * time.Millisecond)
 		}
