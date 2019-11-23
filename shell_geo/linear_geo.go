@@ -1,6 +1,7 @@
 package shell_geo
 
 import (
+	"errors"
 	"math"
 )
 
@@ -20,17 +21,21 @@ func AngleOfSlopeBetween(a Point2D, b Point2D) float64 {
 	return angle
 }
 
-func linearSlope(a Point2D, b Point2D) float64 {
-	return deltaY(a, b) / deltaX(a, b)
+func linearSlope(a Point2D, b Point2D) (float64, error) {
+	deltaX := deltaX(a, b)
+	if (deltaX == 0) {
+		return 0, errors.New("Slope calculation: cannot divide by 0")
+	}
+	return deltaY(a, b) / deltaX, nil
 }
 
 func linearYX0(a Point2D, b Point2D) float64 {
-	slope := linearSlope(a, b)
+	slope, _ := linearSlope(a, b)
 	return a.Y - slope*a.X
 }
 
 func LinearSlopeFuncByX(a Point2D, b Point2D) func(x float64) float64 {
-	slope := linearSlope(a, b)
+	slope, _ := linearSlope(a, b)
 	yx0 := linearYX0(a, b)
 	return func(x float64) float64 {
 		return x*slope + yx0
@@ -38,10 +43,15 @@ func LinearSlopeFuncByX(a Point2D, b Point2D) func(x float64) float64 {
 }
 
 func LinearSlopeFuncByY(a Point2D, b Point2D) func(x float64) float64 {
-	slope := linearSlope(a, b)
+	slope, err := linearSlope(a, b)
+
 	yx0 := linearYX0(a, b)
 	return func(y float64) float64 {
-		return (y - yx0) / slope
+		if err == nil {
+			return (y - yx0) / slope
+		} else {
+			return a.X
+		}
 	}
 }
 

@@ -8,6 +8,7 @@ const fgDefault = "[39m"
 const fgLightGreen = "[92m"
 const fgDarkGray = "[90m"
 const bgWhite = "[107m"
+const bgGreen = "[42m"
 const bgDefault = "[49m"
 
 type Color struct {
@@ -40,6 +41,7 @@ var FgBlue Output = Color{name: "fg Blue", prefix: formatWithPrefix(fgBlue)}
 var FgGreen Output = Color{name: "fg Green", prefix: formatWithPrefix(fgGreen)}
 var FgLightGreen Output = Color{name: "fg LightGreen", prefix: formatWithPrefix(fgLightGreen)}
 var FgDarkGray Output = Color{name: "fg DarkGray", prefix: formatWithPrefix(fgDarkGray)}
-var BgWhite Output = Color{name: "bg white", prefix: formatWithPrefix(bgWhite)}
 var BgDefault Output = Color{name: "bg default", prefix: formatWithPrefix(bgDefault)}
+var BgWhite Output = Color{name: "bg white", prefix: formatWithPrefix(bgWhite)}
+var BgGreen Output = Color{name: "bg green", prefix: formatWithPrefix(bgGreen)}
 var ResetAll Output = Reset{name: "reset all styles"}

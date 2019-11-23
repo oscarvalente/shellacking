@@ -1,6 +1,6 @@
 package shell_geo
 
-func TranslateTo(x float64, y float64, state *[][][]float64) {
+func TranslateBy(x float64, y float64, state *[][][]float64) {
 	t := CreateTranslationMatrix2D(x, y)
 	*state = append(*state, t)
 }

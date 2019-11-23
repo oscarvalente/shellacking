@@ -102,7 +102,7 @@ func CreateRotationMatrix2D(angleDegrees float64) [][]float64 {
 	// Create Scale T matrix
 	// M[l x c] . T[c x c]
 
-	angleRad := angleDegrees * math.Pi / 180
+	angleRad := angleDegrees * math.Pi / 180 * -1
 
 	return [][]float64{{math.Cos(angleRad), -math.Sin(angleRad), 0}, {math.Sin(angleRad), math.Cos(angleRad), 0}, {0, 0, 1}}
 }
@@ -120,7 +120,19 @@ func TransformPoint2D(p *Point2D, state *[][][]float64) [][]float64 {
 	return r
 }
 
-func DrawLine(originalA Point2D, originalB Point2D, color shell_styles.Output, m *shell_core.Matrix, state *[][][]float64) {
+func CreatePoint2D(originalPoint Point2D, color shell_styles.Output, m *shell_core.Matrix, state *[][][]float64) {
+	var point Point2D
+	if (len(*state)) > 0 {
+		pointTransformMatrix := TransformPoint2D(&originalPoint, state)
+		point = CreatePointFromMatrix2D(pointTransformMatrix)
+	} else {
+		point = originalPoint
+	}
+
+	shell_core.InsertMatrixValue(shell_core.CreateColoredAndResetString("_", &color, &shell_styles.ResetAll), int(point.X), int(point.Y), m)
+}
+
+func CreateLine2D(originalA Point2D, originalB Point2D, color shell_styles.Output, m *shell_core.Matrix, state *[][][]float64) {
 	var a, b Point2D
 	if (len(*state)) > 0 {
 		// transform a
@@ -133,27 +145,47 @@ func DrawLine(originalA Point2D, originalB Point2D, color shell_styles.Output, m
 		a = originalA
 		b = originalB
 	}
-	yStart := math.Min(a.Y, b.Y)
-	yEnd := math.Max(a.Y, b.Y)
-	matrixRows := float64(len(m.Lines))
-	r := make([][]float64, 2)
-	r[0] = []float64{}
-	r[1] = []float64{}
 
-	if yStart < 0 || yStart >= matrixRows {
-		panic(fmt.Sprintf("starting Y should be within matrix range (start Y: %f)", yStart))
-	}
+	matrixRows := float64(len(m.Lines) - 1)
+	matrixColumns := float64(len(m.Lines[0]))
 
-	if yEnd < 0 || yEnd >= matrixRows {
-		panic(fmt.Sprintf("ending Y should be within matrix range (end Y: %f)", yEnd))
-	}
+	if math.Abs(deltaY(a, b)) >= math.Abs(deltaX(a, b)) {
+		// Round because pixel positions are integers
+		yStart := math.Round(math.Min(a.Y, b.Y))
+		yEnd := math.Round(math.Max(a.Y, b.Y))
+		//log.Printf("%f to %f", yStart, yEnd)
+		if yStart < 0 || yStart >= matrixRows {
+			panic(fmt.Sprintf("starting Y should be within matrix range (start Y: %f)", yStart))
+		}
 
-	linearFuncByY := LinearSlopeFuncByY(a, b)
-	for y := yStart; y < yEnd; y++ {
-		x := linearFuncByY(y)
-		r[0] = append(r[0], x)
-		r[1] = append(r[1], y)
-		// update by reference
-		shell_core.InsertMatrixValue(shell_core.CreateColoredAndResetString(".", &color, &shell_styles.ResetAll), int(x), int(y), m)
+		if yEnd < 0 || yEnd >= matrixRows {
+			panic(fmt.Sprintf("ending Y should be within matrix range (end Y: %f)", yEnd))
+		}
+
+		linearFuncByY := LinearSlopeFuncByY(a, b)
+		for y := yStart; y <= yEnd; y++ {
+			x := math.Round(linearFuncByY(y))
+			// update by reference
+			shell_core.InsertMatrixValue(shell_core.CreateColoredAndResetString("_", &color, &shell_styles.ResetAll), int(x), int(y), m)
+		}
+	} else {
+		// Round because pixel positions are integers
+		xStart := math.Round(math.Min(a.X, b.X))
+		xEnd := math.Round(math.Max(a.X, b.X))
+		//log.Printf("%f to %f", xStart, xEnd)
+		if xStart < 0 || xStart >= matrixColumns {
+			panic(fmt.Sprintf("starting Y should be within matrix range (start Y: %f)", xStart))
+		}
+
+		if xEnd < 0 || xEnd >= matrixColumns {
+			panic(fmt.Sprintf("ending Y should be within matrix range (end Y: %f)", xEnd))
+		}
+
+		linearFuncByX := LinearSlopeFuncByX(a, b)
+		for x := xStart; x <= xEnd; x++ {
+			y := math.Round(linearFuncByX(x))
+			// update by reference
+			shell_core.InsertMatrixValue(shell_core.CreateColoredAndResetString("_", &color, &shell_styles.ResetAll), int(x), int(y), m)
+		}
 	}
 }

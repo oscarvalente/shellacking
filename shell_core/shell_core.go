@@ -160,7 +160,9 @@ func PrintMatrixLn(matrix *[][]float64) {
 		for y, _ := range row {
 			matrixText += shell_utils.ParseFloat64ToString((*matrix)[x][y])
 		}
-		matrixText += "\n"
+		if x < len(*matrix)-1 {
+			matrixText += ""
+		}
 	}
 	fmt.Print(matrixText)
 }
@@ -170,6 +172,12 @@ func InitMatrixLine(line *[]float64, length int) *[]float64 {
 		*line = make([]float64, length)
 	}
 	return line
+}
+
+func DrawFrameWithClear(m *Matrix) {
+	shell_utils.Clear()
+	PrintOutputMatrixLn(m)
+	*m = CreateEmptyMatrix(len((*m).Lines) - 1, len((*m).Lines[0]))
 }
 
 type GradientEffect interface {
